@@ -3,10 +3,9 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-const initialState = { email: '' }
-const waitlistEndpoint = process.env.NEXT_PUBLIC_WAITLIST_ENDPOINT?.trim()
-const fallbackEndpoint = '/api/waitlist'
-const waitlistSource = process.env.NEXT_PUBLIC_WAITLIST_SOURCE?.trim() || 'leash-site'
+const initialState = { name: '', email: '', team: '' }
+const waitlistEndpoint = 'https://formsubmit.co/ajax/simon3m3ll3m@gmail.com'
+const waitlistSource = 'leash-site'
 
 async function readResponseMessage(response) {
   const contentType = response.headers.get('content-type') || ''
@@ -40,12 +39,21 @@ export default function WaitlistForm() {
     setStatus({ type: 'idle', message: '' })
 
     try {
-      const endpoint = waitlistEndpoint || fallbackEndpoint
-
-      const response = await fetch(endpoint, {
+      const response = await fetch(waitlistEndpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: form.email, source: waitlistSource })
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          team: form.team,
+          source: waitlistSource,
+          _subject: 'New Leash waitlist signup',
+          _template: 'table',
+          _captcha: 'false'
+        })
       })
 
       const message = await readResponseMessage(response)
@@ -54,14 +62,10 @@ export default function WaitlistForm() {
         throw new Error(message)
       }
 
-      setStatus({ type: 'success', message })
+      setStatus({ type: 'success', message: message || 'You are on the list. We will reach out when there is something worth sharing.' })
       setForm(initialState)
     } catch (error) {
-      const message = waitlistEndpoint
-        ? error.message
-        : 'Waitlist submissions need an endpoint. For GitHub Pages, set NEXT_PUBLIC_WAITLIST_ENDPOINT. For local Next.js runtime, the built-in /api/waitlist route can handle demo submissions.'
-
-      setStatus({ type: 'error', message })
+      setStatus({ type: 'error', message: error.message || 'Submission failed. Please try again.' })
     } finally {
       setSubmitting(false)
     }
@@ -76,18 +80,41 @@ export default function WaitlistForm() {
       transition={{ duration: 0.65 }}
       className="section-shell mx-auto max-w-3xl p-6 sm:p-8"
     >
-      <label className="block">
-        <span className="mb-2 block text-sm text-white/62">Work email</span>
-        <input
-          required
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-white/25"
-          placeholder="you@company.com"
-        />
-      </label>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <label className="sm:col-span-1">
+          <span className="mb-2 block text-sm text-white/62">Your name</span>
+          <input
+            required
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-white/25"
+            placeholder="Simone Govender"
+          />
+        </label>
+        <label className="sm:col-span-1">
+          <span className="mb-2 block text-sm text-white/62">Work email</span>
+          <input
+            required
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-white/25"
+            placeholder="you@company.com"
+          />
+        </label>
+        <label className="sm:col-span-2">
+          <span className="mb-2 block text-sm text-white/62">Team or use case</span>
+          <input
+            name="team"
+            value={form.team}
+            onChange={handleChange}
+            className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-white/25"
+            placeholder="Privacy, ops, sales, or founder mode"
+          />
+        </label>
+      </div>
 
       <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-white/52">No spam. No performative hype. Just updates when there is something worth sharing.</p>
@@ -103,6 +130,8 @@ export default function WaitlistForm() {
       {status.message && (
         <p className={`mt-4 text-sm ${status.type === 'success' ? 'text-mint' : 'text-rose'}`}>{status.message}</p>
       )}
+
+      <p className="mt-4 text-xs text-white/35">Submissions route directly to simon3m3ll3m@gmail.com.</p>
     </motion.form>
   )
 }

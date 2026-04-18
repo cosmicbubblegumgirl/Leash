@@ -8,7 +8,9 @@ A premium, creative landing page for an AI governance product built with Next.js
 - Polished mobile navigation
 - Scroll reveal animations
 - Sticky approval card section
-- Functional waitlist form with configurable endpoint
+- Functional waitlist form that emails submissions to simon3m3ll3m@gmail.com
+- Rollout sequence section for governance design
+- Operational signals section for trust and review posture
 - Premium dark visual style with humanized copy
 - Footer text: **A quantum cupcake creation**
 
@@ -28,25 +30,17 @@ Then open http://localhost:3000
 
 ## Notes
 - GitHub Pages deployment is handled by [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml).
-- The repo includes `app/api/waitlist/route.js` for local or server-backed Next.js runs.
-- Set `NEXT_PUBLIC_WAITLIST_ENDPOINT` for GitHub Pages deployments, since static hosting cannot execute Next.js API routes.
-- If `NEXT_PUBLIC_WAITLIST_ENDPOINT` is not set, the form falls back to `/api/waitlist`, which works in local Next.js runtime but not on GitHub Pages.
-- The form submits JSON with `email` and `source`. Set `NEXT_PUBLIC_WAITLIST_SOURCE` if you want a custom source label; otherwise it defaults to `leash-site`.
-- External waitlist endpoints can return JSON like `{ "message": "..." }`, plain text, or an empty `2xx` response.
+- The live waitlist form posts directly to FormSubmit and sends submissions to `simon3m3ll3m@gmail.com`.
+- The repo still includes `app/api/waitlist/route.js` for local or server-backed Next.js runs if you later move off static hosting.
+- The static Pages deployment does not rely on Next.js API routes.
 
 ## Deploy on GitHub Pages
 1. In your GitHub repo, go to **Settings -> Pages**.
 2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
-3. In **Settings -> Secrets and variables -> Actions -> Variables**, add `NEXT_PUBLIC_WAITLIST_ENDPOINT`.
-4. Push to `main` to trigger the workflow.
-5. After deploy completes, the site is available at:
+3. Push to `main` to trigger the workflow.
+4. After deploy completes, the site is available at:
 	`https://cosmicbubblegumgirl.github.io/Leash/`
 
-## Waitlist deployment options
-- GitHub Pages: point `NEXT_PUBLIC_WAITLIST_ENDPOINT` at a serverless function, form backend, or automation endpoint.
-- Full Next.js hosting: deploy to a platform that supports App Router server routes and the built-in `/api/waitlist` demo endpoint will work.
-
-## Waitlist endpoint contract
-- Request: `POST` JSON with `email` and `source`.
-- Success: `200` with `{ "ok": true, "message": "You’re on the list." }`.
-- Error: `400`, `409`, or `500` with `{ "ok": false, "message": "..." }`.
+## Waitlist delivery
+- GitHub Pages: submissions are sent directly to `simon3m3ll3m@gmail.com` via FormSubmit.
+- Full Next.js hosting: you can switch back to the built-in `app/api/waitlist/route.js` if you want server-owned submission handling.

@@ -31,6 +31,7 @@ Then open http://localhost:3000
 - The repo includes `app/api/waitlist/route.js` for local or server-backed Next.js runs.
 - Set `NEXT_PUBLIC_WAITLIST_ENDPOINT` for GitHub Pages deployments, since static hosting cannot execute Next.js API routes.
 - If `NEXT_PUBLIC_WAITLIST_ENDPOINT` is not set, the form falls back to `/api/waitlist`, which works in local Next.js runtime but not on GitHub Pages.
+- The form submits JSON with `email` and `source`. Set `NEXT_PUBLIC_WAITLIST_SOURCE` if you want a custom source label; otherwise it defaults to `leash-site`.
 - External waitlist endpoints can return JSON like `{ "message": "..." }`, plain text, or an empty `2xx` response.
 
 ## Deploy on GitHub Pages
@@ -46,6 +47,6 @@ Then open http://localhost:3000
 - Full Next.js hosting: deploy to a platform that supports App Router server routes and the built-in `/api/waitlist` demo endpoint will work.
 
 ## Waitlist endpoint contract
-- Request: `POST` JSON with `name`, `email`, and `team`.
-- Success: return any `2xx` response. Preferred response is JSON with a `message` field.
-- Error: return non-`2xx`. Preferred response is JSON with a `message` field, but plain text also works.
+- Request: `POST` JSON with `email` and `source`.
+- Success: `200` with `{ "ok": true, "message": "You’re on the list." }`.
+- Error: `400`, `409`, or `500` with `{ "ok": false, "message": "..." }`.

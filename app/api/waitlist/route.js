@@ -7,24 +7,25 @@ function isValidEmail(email) {
 export async function POST(request) {
   try {
     const body = await request.json()
-    const name = String(body?.name || '').trim()
     const email = String(body?.email || '').trim().toLowerCase()
-    const team = String(body?.team || '').trim()
+    const source = String(body?.source || '').trim() || 'leash-site'
 
-    if (!name || !email) {
-      return Response.json({ message: 'Please share your name and email so I know where to write back.' }, { status: 400 })
+    if (!email) {
+      return Response.json({ ok: false, message: 'Please enter a valid email address.' }, { status: 400 })
     }
 
     if (!isValidEmail(email)) {
-      return Response.json({ message: 'That email does not look quite right yet.' }, { status: 400 })
+      return Response.json({ ok: false, message: 'Please enter a valid email address.' }, { status: 400 })
     }
 
-    submissions.push({ name, email, team, createdAt: new Date().toISOString() })
+    if (submissions.some((submission) => submission.email === email)) {
+      return Response.json({ ok: false, message: 'You are already on the list.' }, { status: 409 })
+    }
 
-    return Response.json({
-      message: `Thanks, ${name}. You’re on the list. We’ll be in touch when Permit is ready for curious humans.`
-    })
+    submissions.push({ email, source, createdAt: new Date().toISOString() })
+
+    return Response.json({ ok: true, message: 'You’re on the list.' })
   } catch {
-    return Response.json({ message: 'Something glitched on our side. Please try again.' }, { status: 500 })
+    return Response.json({ ok: false, message: 'Something went wrong. Please try again.' }, { status: 500 })
   }
 }

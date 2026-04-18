@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 
 const initialState = { name: '', email: '', team: '' }
+const waitlistEndpoint = process.env.NEXT_PUBLIC_WAITLIST_ENDPOINT?.trim()
 
 export default function WaitlistForm() {
   const [form, setForm] = useState(initialState)
@@ -21,7 +22,11 @@ export default function WaitlistForm() {
     setStatus({ type: 'idle', message: '' })
 
     try {
-      const response = await fetch('/api/waitlist', {
+      if (!waitlistEndpoint) {
+        throw new Error('Waitlist endpoint is not configured yet. Set NEXT_PUBLIC_WAITLIST_ENDPOINT to connect submissions.')
+      }
+
+      const response = await fetch(waitlistEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

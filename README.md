@@ -8,7 +8,7 @@ A premium, creative landing page for an AI governance product built with Next.js
 - Polished mobile navigation
 - Scroll reveal animations
 - Sticky approval card section
-- Functional waitlist form with API route
+- Functional waitlist form with configurable endpoint
 - Premium dark visual style with humanized copy
 - Footer text: **A quantum cupcake creation**
 
@@ -27,5 +27,13 @@ Then open http://localhost:3000
 - `postcss.config.js` — Tailwind/PostCSS config
 
 ## Notes
-- The waitlist API route stores submissions in memory for demo purposes.
-- For production, connect `/api/waitlist` to a database or email service.
+- GitHub Pages deployment is handled by [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml).
+- Set `NEXT_PUBLIC_WAITLIST_ENDPOINT` for the waitlist form (for example, a serverless function URL).
+- GitHub Pages is static hosting, so Next.js API routes are not available there.
+
+## Deploy on GitHub Pages
+1. In your GitHub repo, go to **Settings -> Pages**.
+2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+3. Push to `main` to trigger the workflow.
+4. After deploy completes, the site is available at:
+	`https://<your-github-username>.github.io/Leash/`

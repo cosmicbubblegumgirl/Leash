@@ -29,7 +29,7 @@ Then open http://localhost:3000
 - `postcss.config.js` — Tailwind/PostCSS config
 
 ## Notes
-- GitHub Pages deployment is handled by [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml).
+- GitHub Pages deployment is handled by [.github/workflows/nextjs.yml](.github/workflows/nextjs.yml).
 - The live waitlist form posts directly to FormSubmit and sends submissions to `simon3m3ll3m@gmail.com`.
 - The repo still includes `app/api/waitlist/route.js` for local or server-backed Next.js runs if you later move off static hosting.
 - The static Pages deployment does not rely on Next.js API routes.

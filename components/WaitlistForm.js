@@ -7,6 +7,22 @@ const initialState = { name: '', email: '', team: '' }
 const waitlistEndpoint = process.env.NEXT_PUBLIC_WAITLIST_ENDPOINT?.trim()
 const fallbackEndpoint = '/api/waitlist'
 
+async function readResponseMessage(response) {
+  const contentType = response.headers.get('content-type') || ''
+
+  if (contentType.includes('application/json')) {
+    const data = await response.json()
+    return data?.message || (response.ok ? 'Thanks. You are on the list.' : 'Something went sideways. Please try again.')
+  }
+
+  const text = await response.text()
+  if (text.trim()) {
+    return text.trim()
+  }
+
+  return response.ok ? 'Thanks. You are on the list.' : 'Something went sideways. Please try again.'
+}
+
 export default function WaitlistForm() {
   const [form, setForm] = useState(initialState)
   const [status, setStatus] = useState({ type: 'idle', message: '' })
@@ -31,13 +47,13 @@ export default function WaitlistForm() {
         body: JSON.stringify(form)
       })
 
-      const data = await response.json()
+      const message = await readResponseMessage(response)
 
       if (!response.ok) {
-        throw new Error(data.message || 'Something went sideways. Please try again.')
+        throw new Error(message)
       }
 
-      setStatus({ type: 'success', message: data.message })
+      setStatus({ type: 'success', message })
       setForm(initialState)
     } catch (error) {
       const message = waitlistEndpoint

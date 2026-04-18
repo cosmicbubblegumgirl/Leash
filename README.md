@@ -28,8 +28,9 @@ Then open http://localhost:3000
 
 ## Notes
 - GitHub Pages deployment is handled by [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml).
-- Set `NEXT_PUBLIC_WAITLIST_ENDPOINT` for the waitlist form (for example, a serverless function URL).
-- GitHub Pages is static hosting, so Next.js API routes are not available there.
+- The repo includes `app/api/waitlist/route.js` for local or server-backed Next.js runs.
+- Set `NEXT_PUBLIC_WAITLIST_ENDPOINT` for GitHub Pages deployments, since static hosting cannot execute Next.js API routes.
+- If `NEXT_PUBLIC_WAITLIST_ENDPOINT` is not set, the form falls back to `/api/waitlist`, which works in local Next.js runtime but not on GitHub Pages.
 
 ## Deploy on GitHub Pages
 1. In your GitHub repo, go to **Settings -> Pages**.
@@ -37,3 +38,7 @@ Then open http://localhost:3000
 3. Push to `main` to trigger the workflow.
 4. After deploy completes, the site is available at:
 	`https://<your-github-username>.github.io/Leash/`
+
+## Waitlist deployment options
+- GitHub Pages: point `NEXT_PUBLIC_WAITLIST_ENDPOINT` at a serverless function, form backend, or automation endpoint.
+- Full Next.js hosting: deploy to a platform that supports App Router server routes and the built-in `/api/waitlist` demo endpoint will work.

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 
 const initialState = { name: '', email: '', team: '' }
 const waitlistEndpoint = process.env.NEXT_PUBLIC_WAITLIST_ENDPOINT?.trim()
+const fallbackEndpoint = '/api/waitlist'
 
 export default function WaitlistForm() {
   const [form, setForm] = useState(initialState)
@@ -22,11 +23,9 @@ export default function WaitlistForm() {
     setStatus({ type: 'idle', message: '' })
 
     try {
-      if (!waitlistEndpoint) {
-        throw new Error('Waitlist endpoint is not configured yet. Set NEXT_PUBLIC_WAITLIST_ENDPOINT to connect submissions.')
-      }
+      const endpoint = waitlistEndpoint || fallbackEndpoint
 
-      const response = await fetch(waitlistEndpoint, {
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
@@ -41,7 +40,11 @@ export default function WaitlistForm() {
       setStatus({ type: 'success', message: data.message })
       setForm(initialState)
     } catch (error) {
-      setStatus({ type: 'error', message: error.message })
+      const message = waitlistEndpoint
+        ? error.message
+        : 'Waitlist submissions need an endpoint. For GitHub Pages, set NEXT_PUBLIC_WAITLIST_ENDPOINT. For local Next.js runtime, the built-in /api/waitlist route can handle demo submissions.'
+
+      setStatus({ type: 'error', message })
     } finally {
       setSubmitting(false)
     }

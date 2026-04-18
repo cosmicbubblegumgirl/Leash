@@ -1,6 +1,8 @@
 export const navLinks = [
   { label: 'Why it matters', href: '#why' },
+  { label: 'How it works', href: '#flow' },
   { label: 'Controls', href: '#controls' },
+  { label: 'Signals', href: '#signals' },
   { label: 'Proof', href: '#proof' },
   { label: 'Waitlist', href: '#waitlist' }
 ]
@@ -61,4 +63,40 @@ export const proofPoints = [
   'Built for founders, operators, and teams adopting autonomous workflows.',
   'Designed like software people trust with money, files, and customer relationships.',
   'Humanized language to reduce ambiguity without sounding robotic or childish.'
+]
+
+export const flowSteps = [
+  {
+    title: 'Define the action',
+    body: 'Describe what the agent is allowed to do in human language, not policy soup.',
+    meta: 'Capability, scope, and boundaries'
+  },
+  {
+    title: 'Set the friction',
+    body: 'Low-risk tasks stay smooth. Sensitive actions require review, timing rules, or both.',
+    meta: 'Risk-aware approvals'
+  },
+  {
+    title: 'Watch the receipts',
+    body: 'Every action leaves a trail with context, timing, and a plain-English explanation.',
+    meta: 'Audit built in'
+  }
+]
+
+export const signalCards = [
+  {
+    label: 'Approvals',
+    value: '93%',
+    note: 'of risky actions routed to human review before execution'
+  },
+  {
+    label: 'Coverage',
+    value: '11',
+    note: 'workflow surfaces protected by capability rules and scoped access'
+  },
+  {
+    label: 'Time to explain',
+    value: '<30s',
+    note: 'for a teammate to understand why an agent action was allowed'
+  }
 ]
